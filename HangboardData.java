@@ -47,8 +47,9 @@ public class HangboardData {
 
     private String selectFromSQL = "SELECT * FROM ";
 
-    public void deleteDataByID(String name){
-        mDatabase.delete(HangboardDataEntry.TABLE_NAME, HangboardDataEntry.COLUMN_NAME + " = " + name, null);
+    public void deleteDataByName(String name){
+        String[] param = {name};
+        mDatabase.delete(HangboardDataEntry.TABLE_NAME, HangboardDataEntry.COLUMN_NAME + " = ?", param);
     }
 
     public void getHangboardData(String name, int[] x, int[] y) {
