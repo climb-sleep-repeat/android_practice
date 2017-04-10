@@ -32,6 +32,7 @@ public class TestFragment extends ListFragment implements AdapterView.OnItemClic
     private int mTabNum;
     private HangboardData mData;
     private List<String> mNames;
+    private int mListItemNum;
     public TestFragment() {
         // Required empty public constructor
     }
@@ -48,10 +49,6 @@ public class TestFragment extends ListFragment implements AdapterView.OnItemClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_blank, container, false);
-       // setListShown(false);
-        //return v;
         return super.onCreateView(inflater,container,savedInstanceState);
     }
 
@@ -73,6 +70,7 @@ public class TestFragment extends ListFragment implements AdapterView.OnItemClic
         mData.addHangboardData("list_item_3", 3,2);
         mData.addHangboardData("list_item_4", 4,1);
 
+        mListItemNum = 5;
         //List<String> strArr = new ArrayList<>();
         mNames = new ArrayList<>();
         mData.getNames(mNames);
@@ -81,20 +79,23 @@ public class TestFragment extends ListFragment implements AdapterView.OnItemClic
         //ListView listView = (ListView) getView().findViewById(R.id.test_list);
         setListAdapter(itemAdapter);
         getListView().setOnItemClickListener(this);
-        FloatingActionButton button = (FloatingActionButton)getView().findViewById(R.id.button);
-        //button.show();
-        /*button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view){
-
-            }
-        }
-        );*/
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         //Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setCancelable(true);
+        alertDialogBuilder.setNeutralButton("add", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which){
+                mData.addHangboardData("list_item_" + Integer.toString(mListItemNum++), mListItemNum, mListItemNum);
+                mNames = new ArrayList<>();
+                mData.getNames(mNames);
+                ArrayAdapter<String> itemAdapter= new ArrayAdapter<>(getActivity(), R.layout.list_view_layout, mNames);
+                //ListView listView = (ListView) getView().findViewById(R.id.test_list);
+                setListAdapter(itemAdapter);
+            }
+        });
         alertDialogBuilder.setPositiveButton("delete", new DialogInterface.OnClickListener() {
             public void onClick (DialogInterface dialog,int which){
                 mData.deleteDataByName(mNames.get(position));
