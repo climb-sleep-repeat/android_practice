@@ -30,7 +30,7 @@ import java.util.List;
 public class TestFragment extends ListFragment implements AdapterView.OnItemClickListener{
     private ListAdapter mListAdapter;
     private int mTabNum;
-    private HangboardData mData;
+    
     private List<String> mNames;
     private int mListItemNum;
     public TestFragment() {
@@ -57,23 +57,11 @@ public class TestFragment extends ListFragment implements AdapterView.OnItemClic
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
 
-        mData = new HangboardData(activity);
-        try{
-            mData.init();
-        }
-        catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-
-        mData.addHangboardData("list_item_1", 1,4);
-        mData.addHangboardData("list_item_2", 2,3);
-        mData.addHangboardData("list_item_3", 3,2);
-        mData.addHangboardData("list_item_4", 4,1);
 
         mListItemNum = 5;
         //List<String> strArr = new ArrayList<>();
         mNames = new ArrayList<>();
-        mData.getNames(mNames);
+        HangboardData.getNames(mNames);
 
         ArrayAdapter<String> itemAdapter= new ArrayAdapter<>(activity, R.layout.list_view_layout, mNames);
         //ListView listView = (ListView) getView().findViewById(R.id.test_list);
@@ -88,19 +76,19 @@ public class TestFragment extends ListFragment implements AdapterView.OnItemClic
         alertDialogBuilder.setCancelable(true);
         alertDialogBuilder.setNeutralButton("add", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which){
-                mData.addHangboardData("list_item_" + Integer.toString(mListItemNum++), mListItemNum, mListItemNum);
+                HangboardData.addHangboardData("list_item_" + Integer.toString(mListItemNum++), mListItemNum, mListItemNum);
                 mNames = new ArrayList<>();
-                mData.getNames(mNames);
+                HangboardData.getNames(mNames);
                 ArrayAdapter<String> itemAdapter= new ArrayAdapter<>(getActivity(), R.layout.list_view_layout, mNames);
                 //ListView listView = (ListView) getView().findViewById(R.id.test_list);
-                setListAdapter(itemAdapter);
+                setListAdapter(itemAdapter);  
             }
         });
         alertDialogBuilder.setPositiveButton("delete", new DialogInterface.OnClickListener() {
             public void onClick (DialogInterface dialog,int which){
-                mData.deleteDataByName(mNames.get(position));
+                HangboardData.deleteDataByName(mNames.get(position));
                 mNames = new ArrayList<>();
-                mData.getNames(mNames);
+                HangboardData.getNames(mNames);
                 ArrayAdapter<String> itemAdapter= new ArrayAdapter<>(getActivity(), R.layout.list_view_layout, mNames);
                 //ListView listView = (ListView) getView().findViewById(R.id.test_list);
                 setListAdapter(itemAdapter);

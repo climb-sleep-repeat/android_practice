@@ -38,7 +38,6 @@ public class TabFragment extends Fragment {
     public static ViewPager viewPager;
     public static int int_items = 2;
     public static List<Fragment> mFragmentList;
-
     public TabFragment() {
         // Required empty public constructor
     }
@@ -58,7 +57,6 @@ public class TabFragment extends Fragment {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -69,7 +67,12 @@ public class TabFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
+        HangboardData hangboardData= new HangboardData(getActivity());
+        hangboardData.init();
+        HangboardData.addHangboardData("list_item_1", 5,2);
+        HangboardData.addHangboardData("list_item_2", 6,5);
+        HangboardData.addHangboardData("list_item_3", 7,4);
+        HangboardData.addHangboardData("list_item_4", 8,3);
     }
 
     @Override

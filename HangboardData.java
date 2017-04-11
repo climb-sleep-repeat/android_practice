@@ -16,8 +16,8 @@ import java.util.List;
  */
 
 public class HangboardData {
-    private SQLiteDatabase mDatabase;
-    private HandboardDataDBHelper mDatabaseHelper;
+    private static SQLiteDatabase mDatabase;
+    private static HangboardDataDBHelper mDatabaseHelper;
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + HangboardDataEntry.TABLE_NAME + " ( " +
@@ -35,26 +35,31 @@ public class HangboardData {
     }
 
     public HangboardData(Context context){
-        mDatabaseHelper = new HandboardDataDBHelper(context);
+        mDatabaseHelper = new HangboardDataDBHelper(context);
     }
 
     public void init() throws SQLException{
         mDatabase = mDatabaseHelper.getWritableDatabase();
     }
-    public void close(){
+    public static void close(){
         mDatabaseHelper.close();
     }
 
-    private String selectFromSQL = "SELECT * FROM ";
+    private static String selectFromSQL = "SELECT * FROM ";
 
-    public void deleteDataByName(String name){
+    public static void deleteDataByName(String name){
         String[] param = {name};
         mDatabase.delete(HangboardDataEntry.TABLE_NAME, HangboardDataEntry.COLUMN_NAME + " = ?", param);
     }
 
-    public void getHangboardData(String name, int[] x, int[] y) {
-        String[] params = {name};
-        Cursor c = mDatabase.rawQuery("SELECT " + HangboardDataEntry.COLUMN_X_DATA + ", " + HangboardDataEntry.COLUMN_Y_DATA + " FROM "  + HangboardDataEntry.TABLE_NAME + " WHERE " + HangboardDataEntry.COLUMN_NAME + " = ? ", params);
+    public static void getHangboardData(String name, int[] x, int[] y) {
+        //String[] params = {name};
+        //Cursor c = mDatabase.rawQuery("SELECT " + HangboardDataEntry.COLUMN_X_DATA + ", " + HangboardDataEntry.COLUMN_Y_DATA + " FROM "  + HangboardDataEntry.TABLE_NAME + " WHERE " + HangboardDataEntry.COLUMN_NAME + " = ? ", params);
+        //c.moveToFirst();
+
+        String[] columns = {HangboardDataEntry.COLUMN_X_DATA, HangboardDataEntry.COLUMN_Y_DATA};
+        String[] param = {name};
+        Cursor c = mDatabase.query(HangboardDataEntry.TABLE_NAME, columns, HangboardDataEntry.COLUMN_NAME + " = ?", param, null, null, null, null );
         c.moveToFirst();
         for (int i = 0; i < c.getCount(); i++) {
             x[i] = c.getInt(0);
@@ -63,7 +68,7 @@ public class HangboardData {
         }
     }
 
-    public void getNames(List<String> names){
+    public static void getNames(List<String> names){
         //Cursor c = mDatabase.rawQuery("SELECT " + HangboardDataEntry.COLUMN_NAME + " FROM " + HangboardDataEntry.TABLE_NAME, null );
         String[] columns = {HangboardDataEntry.COLUMN_NAME};
         Cursor c = mDatabase.query(true,HangboardDataEntry.TABLE_NAME, columns,null, null, null, null, null, null);
@@ -73,18 +78,20 @@ public class HangboardData {
             c.moveToNext();
         }
     }
-    public int getHangboardDataSize(){
-        Cursor c = mDatabase.rawQuery(selectFromSQL + HangboardDataEntry.TABLE_NAME, null );
+    public static int getHangboardDataSizeForName(String name){
+        String[] columns = {HangboardDataEntry.COLUMN_X_DATA, HangboardDataEntry.COLUMN_Y_DATA};
+        String[] param = {name};
+        Cursor c = mDatabase.query(HangboardDataEntry.TABLE_NAME, columns, HangboardDataEntry.COLUMN_NAME + " = ?", param, null, null, null, null );
         return c.getCount();
     }
-    public int getNumberOfNames(){
+    public static int getNumberOfNames(){
         //Cursor c = mDatabase.rawQuery("SELECT DISTINCT " + HangboardDataEntry.COLUMN_NAME + " FROM " + HangboardDataEntry.TABLE_NAME, null );
         String[] columns = {HangboardDataEntry.COLUMN_NAME};
         Cursor c = mDatabase.query(true,HangboardDataEntry.TABLE_NAME, columns,null, null, null, null, null, null);
         return c.getCount();
     }
 
-    public void addHangboardData(String name, int x, int y){
+    public static void addHangboardData(String name, int x, int y){
         // Gets the data repository in write mode
 
 // Create a new map of values, where column names are the keys
@@ -97,11 +104,11 @@ public class HangboardData {
         long newRowId = mDatabase.insert(HangboardDataEntry.TABLE_NAME, null, values);
     }
 
-    private class HandboardDataDBHelper extends SQLiteOpenHelper{
+    private class HangboardDataDBHelper extends SQLiteOpenHelper{
         public static final int DATABASE_VERSION = 2;
         public static final String DATABASE_NAME = "new.db";
 
-        public HandboardDataDBHelper(Context context) {
+        public HangboardDataDBHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 

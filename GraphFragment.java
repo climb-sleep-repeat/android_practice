@@ -15,13 +15,17 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class GraphFragment extends BlankFragment {
-    LineGraphSeries<DataPoint> mSeries;
-    int mTabNum;
+
+    int mTabNumes;
+
     public GraphFragment() {
         // Required empty public constructor
     }
@@ -34,19 +38,24 @@ public class GraphFragment extends BlankFragment {
         //TextView textView = (TextView)v.findViewById(R.id.graph_text);
         //textView.setText("I'm here!");
         GraphView graphView = (GraphView)v.findViewById(R.id.graph);
+        List<String> names = new ArrayList<>();
+        HangboardData.getNames(names);
+        for(int i = 0; i<HangboardData.getNumberOfNames();i++){
+            int size = HangboardData.getHangboardDataSizeForName(names.get(i));
+            int[] y = new int[size];
+            int[] x = new int[size];
+            HangboardData.getHangboardData(names.get(i), x, y);
 
-        //graphView.setBackgroundColor(Color.RED);
-        double x = 0;
-        double y = 0;
-        mSeries = new LineGraphSeries<DataPoint>();
-        mSeries.setDrawBackground(true);
-        mSeries.setBackgroundColor(Color.BLUE);
-        for(int i = 0;i<100;i++) {
-            x = x + 0.1;
-            y = Math.sin(x);
-            mSeries.appendData(new DataPoint(x, y), true, 100);
+            LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
+            series.setTitle(names.get(i));
+            series.setDrawBackground(true);
+//            series.setBackgroundColor(Color.BLUE);
+            for(int j = 0;j<size;j++) {
+                series.appendData(new DataPoint(x[j], y[j]), true, size);
+            }
+            graphView.addSeries(series);
         }
-        graphView.addSeries(mSeries);
+
         return v;
     }
 
