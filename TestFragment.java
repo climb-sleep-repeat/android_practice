@@ -4,6 +4,7 @@ package com.example.root.drawertabtest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.database.SQLException;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -27,7 +28,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TestFragment extends ListFragment implements AdapterView.OnItemClickListener{
+public class TestFragment extends ListFragment implements AdapterView.OnItemClickListener, FloatingActionButton.OnClickListener{
     private ListAdapter mListAdapter;
     private int mTabNum;
     
@@ -44,7 +45,20 @@ public class TestFragment extends ListFragment implements AdapterView.OnItemClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return super.onCreateView(inflater,container,savedInstanceState);
+        //return
+        View v = inflater.inflate(R.layout.fragment_blank, container, false);
+        FloatingActionButton floatingActionButton = (FloatingActionButton)v.findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),
+                        "Button is clicked", Toast.LENGTH_LONG).show();
+            }
+        });
+        return v;
+
+        //return super.onCreateView(inflater,container,savedInstanceState);
+
     }
 
     @Override
@@ -57,11 +71,11 @@ public class TestFragment extends ListFragment implements AdapterView.OnItemClic
         //List<String> strArr = new ArrayList<>();
         mNames = new ArrayList<>();
         HangboardData.getNames(mNames);
-
-        ArrayAdapter<String> itemAdapter= new ArrayAdapter<>(activity, R.layout.list_view_layout, mNames);
-        //ListView listView = (ListView) getView().findViewById(R.id.test_list);
+        ArrayAdapter<String> itemAdapter= new ArrayAdapter<>(getActivity(), R.layout.list_view_layout, mNames);
+        //ListView listView = (ListView) v.findViewById(R.id.list);
         setListAdapter(itemAdapter);
         getListView().setOnItemClickListener(this);
+
     }
 
     @Override
@@ -94,5 +108,12 @@ public class TestFragment extends ListFragment implements AdapterView.OnItemClic
         alertDialogBuilder.setNegativeButton("edit", null);
         AlertDialog ad = alertDialogBuilder.create();
         ad.show();
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        Toast.makeText(getActivity(),
+                "Button is clicked", Toast.LENGTH_LONG).show();
     }
 }
