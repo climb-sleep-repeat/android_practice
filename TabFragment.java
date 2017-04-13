@@ -69,10 +69,10 @@ public class TabFragment extends Fragment {
         }
         HangboardData hangboardData= new HangboardData(getActivity());
         hangboardData.init();
-        HangboardData.addHangboardData("list_item_1", 5,2);
-        HangboardData.addHangboardData("list_item_2", 6,5);
-        HangboardData.addHangboardData("list_item_3", 7,4);
-        HangboardData.addHangboardData("list_item_4", 8,3);
+        HangboardData.addHangboardData("list_item_1", 10,10);
+        HangboardData.addHangboardData("list_item_2", 11,11);
+        HangboardData.addHangboardData("list_item_3", 12,12);
+        HangboardData.addHangboardData("list_item_4", 13,13);
     }
 
     @Override

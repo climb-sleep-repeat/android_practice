@@ -22,10 +22,10 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GraphFragment extends BlankFragment {
+public class GraphFragment extends BlankFragment implements HangboardData.HangboardDataListener{
 
     int mTabNumes;
-
+    GraphView mGraphView;
     public GraphFragment() {
         // Required empty public constructor
     }
@@ -37,7 +37,21 @@ public class GraphFragment extends BlankFragment {
         View v = inflater.inflate(R.layout.fragment_graph, null);
         //TextView textView = (TextView)v.findViewById(R.id.graph_text);
         //textView.setText("I'm here!");
-        GraphView graphView = (GraphView)v.findViewById(R.id.graph);
+        mGraphView = (GraphView)v.findViewById(R.id.graph);
+        HangboardData.addListener(this);
+        updateGraph();
+        return v;
+    }
+
+    @Override
+    public void onHangboardDataUpdate() {
+        updateGraph();
+    }
+
+    private void updateGraph(){
+        if(!mGraphView.getSeries().isEmpty())
+                mGraphView.removeAllSeries();
+
         List<String> names = new ArrayList<>();
         HangboardData.getNames(names);
         for(int i = 0; i<HangboardData.getNumberOfNames();i++){
@@ -53,10 +67,8 @@ public class GraphFragment extends BlankFragment {
             for(int j = 0;j<size;j++) {
                 series.appendData(new DataPoint(x[j], y[j]), true, size);
             }
-            graphView.addSeries(series);
+            mGraphView.addSeries(series);
         }
-
-        return v;
     }
-
 }
+

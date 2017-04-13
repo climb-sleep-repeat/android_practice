@@ -18,6 +18,7 @@ import java.util.List;
 public class HangboardData {
     private static SQLiteDatabase mDatabase;
     private static HangboardDataDBHelper mDatabaseHelper;
+    private static ArrayList<HangboardDataListener> mListenerList;
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + HangboardDataEntry.TABLE_NAME + " ( " +
@@ -36,6 +37,7 @@ public class HangboardData {
 
     public HangboardData(Context context){
         mDatabaseHelper = new HangboardDataDBHelper(context);
+        mListenerList = new ArrayList<>();
     }
 
     public void init() throws SQLException{
@@ -50,6 +52,7 @@ public class HangboardData {
     public static void deleteDataByName(String name){
         String[] param = {name};
         mDatabase.delete(HangboardDataEntry.TABLE_NAME, HangboardDataEntry.COLUMN_NAME + " = ?", param);
+        updateListeners();
     }
 
     public static void getHangboardData(String name, int[] x, int[] y) {
@@ -59,7 +62,7 @@ public class HangboardData {
 
         String[] columns = {HangboardDataEntry.COLUMN_X_DATA, HangboardDataEntry.COLUMN_Y_DATA};
         String[] param = {name};
-        Cursor c = mDatabase.query(HangboardDataEntry.TABLE_NAME, columns, HangboardDataEntry.COLUMN_NAME + " = ?", param, null, null, null, null );
+        Cursor c = mDatabase.query(HangboardDataEntry.TABLE_NAME, columns, HangboardDataEntry.COLUMN_NAME + " = ?", param, null, null, HangboardDataEntry.COLUMN_X_DATA + " asc ", null );
         c.moveToFirst();
         for (int i = 0; i < c.getCount(); i++) {
             x[i] = c.getInt(0);
@@ -102,6 +105,18 @@ public class HangboardData {
 
 // Insert the new row, returning the primary key value of the new row
         long newRowId = mDatabase.insert(HangboardDataEntry.TABLE_NAME, null, values);
+        updateListeners();
+    }
+    public static void addListener(HangboardDataListener listener){
+        mListenerList.add(listener);
+    }
+
+    private static void updateListeners(){
+        if(!mListenerList.isEmpty()) {
+            for (int i = 0; i < mListenerList.size(); i++) {
+                mListenerList.get(i).onHangboardDataUpdate();
+            }
+        }
     }
 
     private class HangboardDataDBHelper extends SQLiteOpenHelper{
@@ -122,5 +137,9 @@ public class HangboardData {
             db.execSQL(SQL_DEL_ENTRIES);
             onCreate(db);
         }
+    }
+
+    public interface HangboardDataListener{
+        void onHangboardDataUpdate();
     }
 }

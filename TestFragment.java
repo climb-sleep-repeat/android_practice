@@ -37,11 +37,6 @@ public class TestFragment extends ListFragment implements AdapterView.OnItemClic
         // Required empty public constructor
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-    }
-
     public static Fragment newInstance(){
         return new TestFragment();
     }
