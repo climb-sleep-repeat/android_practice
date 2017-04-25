@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.example.root.drawertabtest.BlankFragment;
 import com.example.root.drawertabtest.R;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -23,7 +25,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class GraphFragment extends BlankFragment implements HangboardData.HangboardDataListener{
-
+    static int colors[] = {Color.BLUE, Color.GRAY, Color.GREEN, Color.MAGENTA, Color.RED, Color.YELLOW};
     int mTabNumes;
     GraphView mGraphView;
     public GraphFragment() {
@@ -62,13 +64,22 @@ public class GraphFragment extends BlankFragment implements HangboardData.Hangbo
 
             LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
             series.setTitle(names.get(i));
-            series.setDrawBackground(true);
-//            series.setBackgroundColor(Color.BLUE);
+            series.setDrawBackground(false);
+            series.setColor(colors[i%colors.length]);
+
             for(int j = 0;j<size;j++) {
                 series.appendData(new DataPoint(x[j], y[j]), true, size);
             }
             mGraphView.addSeries(series);
+
         }
+        LegendRenderer legendRenderer = mGraphView.getLegendRenderer();
+        legendRenderer.setVisible(true);
+        legendRenderer.setFixedPosition(25,25);
+        legendRenderer.setBackgroundColor(Color.TRANSPARENT);
+        //GridLabelRenderer gridLabelRenderer = mGraphView.getGridLabelRenderer();
+        //gridLabelRenderer.setGridStyle(GridLabelRenderer.GridStyle.NONE);
+        //mGraphView.setBackgroundColor(Color.BLACK);
     }
 }
 

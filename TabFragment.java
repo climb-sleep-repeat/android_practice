@@ -69,10 +69,7 @@ public class TabFragment extends Fragment {
         }
         HangboardData hangboardData= new HangboardData(getActivity());
         hangboardData.init();
-        HangboardData.addHangboardData("list_item_1", 10,10);
-        HangboardData.addHangboardData("list_item_2", 11,11);
-        HangboardData.addHangboardData("list_item_3", 12,12);
-        HangboardData.addHangboardData("list_item_4", 13,13);
+
     }
 
     @Override
@@ -140,9 +137,9 @@ public class TabFragment extends Fragment {
 
             switch (position){
                 case 0 :
-                    return "Primary";
+                    return "Workout";
                 case 1 :
-                    return "Social";
+                    return "Data";
                 case 2 :
                     return "Updates";
             }
